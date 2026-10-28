@@ -11,3 +11,10 @@
 - Evidence: `python -m pytest -q` reported **14 passed** and a synthetic localhost API extraction returned expected structured content; Chromium localhost navigation was blocked by this environment's browser policy.
 - Pending: live agent benchmarks, secure browser network isolation, credential vault, distributed queue, multi-tenancy, production deployment review.
 - Remote status: **local candidate only**; no GitHub push or deployment requested or implied. ChatGPT Project Sources not auto-updated.
+
+## Documentation synchronization — 2026-10-29 (additional entry)
+
+- Added the reviewed master handover at `project_memory/PROJECT_MEMORY.md`, next to module histories.
+- Updated the canonical root handover with verified v0.2.0 publication information and added matching navigation links to the memory index.
+- No runtime code changes and no application tests rerun for this documentation-only update.
+- Both memory copies remain manually maintained: future GitHub edits require separate user authorization, and ChatGPT Project Sources remain unchanged.
