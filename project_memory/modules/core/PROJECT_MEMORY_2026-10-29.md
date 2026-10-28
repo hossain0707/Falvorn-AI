@@ -1,37 +1,25 @@
 # Falvorn Core — PROJECT_MEMORY_2026-10-29
 
-> Asia/Seoul · Entry type: initial source-grounded baseline · Source commit reviewed: `6f17f8fdd1b4e3686b4ff22c56c6718f47f158f5`
+## Initial historical baseline
+- GitHub memory initialized at commit `f234cdc9`; original v0.1 module contained relevant implementation, with no new code in the memory-only commit.
 
-## Scope
-- `falvorn/config.py`
-- `falvorn/models.py`
-- `falvorn/security.py`
+## Later local v0.2 candidate
+- Runtime configuration and bounded settings
+- Pydantic request models with scheduler subscription validation
+- API key and private-IP/domain URL checks
+- SQLite WAL event and monitor-subscription store
 
-## Documented existing functionality (not newly implemented today)
-- Environment-based settings and bounded operational limits.
-- Pydantic models for agent, browser, fetch, search, and monitor requests.
-- API-key check, URL syntax/domain validation, DNS/IP screening, and guarded unsafe-target handling.
-- Private-target access disabled by default, with explicit test-only override controls.
+## Evidence
+- Overall local suite: **14 passed**; no isolated claim for this module. API localhost HTML extraction verified. Chromium navigation outside in-memory pages blocked by sandbox policy.
 
-## Validation
-- **Executed this session:** reviewed source files and existing project documentation; **application tests not rerun**.
-- **Historical statement:** previous v0.1 prototype reported 9 passing local tests (overall project, not this module specifically).
-- **Not verified:** production readiness and live external-site end-to-end results.
+## Limitations
+- DNS checks are not a firewall or SSRF prevention guarantee
+- SQLite and API key single-node/single-user only
+- No encrypted credential vault, immutable audit or RBAC
 
-## Known limitations / risks
-- DNS validation alone is not a complete SSRF barrier; proxy/firewall egress enforcement is required.
-- API-key-only deployment is not enterprise identity management.
-- No RBAC, organization scoping, secrets vault, metering, signed audit records, or compliance review.
+## Next work
+- [ ] Create threat-model-informed egress controls
+- [ ] Design tenant/auth/secrets architecture
 
-## Decisions
-- Maintain a dedicated module history and refreshed `CURRENT.md`, plus a project-level handover.
-- Do not confuse current code with planned roadmap features.
-- Keep all remote edits opt-in and secrets out of public docs.
-
-## Next steps
-- [ ] Define tenant identity, permission and approval policy contracts.
-- [ ] Harden egress validation against DNS rebinding and redirect edge cases.
-- [ ] Add threat model, secret-handling design, and security regression tests.
-
-## Remote / ChatGPT Sources
-- Initial repository memory integration requested by user; no future push, deployment or automatic Sources synchronization authorized.
+## Publication policy
+- Local candidate not automatically committed/pushed; user approval required for remote write. ChatGPT Sources are not auto-updated.

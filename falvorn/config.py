@@ -23,5 +23,6 @@ class Settings:
     max_page_bytes: int = max(1024, min(4_000_000, int(os.getenv("MAX_PAGE_BYTES", "1000000"))))
     headless: bool = flag("BROWSER_HEADLESS", True)
     data_dir: str = os.getenv("DATA_DIR", "./data")
+    monitor_scheduler_enabled: bool = flag("MONITOR_SCHEDULER_ENABLED", False)
 
 settings = Settings()

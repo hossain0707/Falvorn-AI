@@ -1,12 +1,11 @@
-.PHONY: install dev test run docker
+.PHONY: install test run check
 install:
-	python -m pip install -r requirements.txt
-
-dev:
-	python -m falvorn
-
+	python -m pip install -r requirements-dev.txt
+	python -m playwright install chromium
 test:
 	python -m pytest -q
-
-docker:
-	docker compose up --build
+check:
+	python -m compileall -q falvorn
+	python -m pytest -q
+run:
+	python -m falvorn

@@ -1,182 +1,204 @@
-# Falvorn AI
+<div align="center">
 
-> **Intelligence without limits.** Built for precision, powered by autonomy.
+<img src="assets/brand-banner.svg" alt="Falvorn AI, Intelligence Without Limits" width="100%"/>
 
-**Falvorn AI** is an independently engineered, self-hostable autonomous browser-agent foundation. Its flagship product is **Falvorn Agent**, with **Falvorn Browser**, **Falvorn API**, and **Falvorn Core** as clearly defined components. This repository implements an experimental modular monolith, *not* four finished commercial services.
+# FALVORN AI
 
-| Component | Source | Current capabilities |
+**The autonomous web execution foundation.**  
+*Intelligence without limits. Precision in every action.*
+
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/) [![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/) [![Playwright](https://img.shields.io/badge/Browser-Playwright-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/) ![License](https://img.shields.io/badge/License-Proprietary-red) ![Status](https://img.shields.io/badge/Release-v0.2%20Experimental-ffc247?labelColor=111827)
+
+**[Getting started](#-quick-start)** · **[Architecture](#-architecture)** · **[API](#-api-and-sdk)** · **[Security](#-security-boundaries)** · **[Demo video](assets/demo/falvorn-walkthrough.mp4)** · **[Roadmap](docs/roadmap.md)**
+
+</div>
+
+---
+
+## 🎬 Product walkthrough
+
+<div align="center">
+  <a href="assets/demo/falvorn-walkthrough.mp4" title="Open the Falvorn AI walkthrough video">
+    <img src="assets/demo/falvorn-preview.gif" alt="Animated 7-second preview of the Falvorn AI dashboard" width="92%"/>
+  </a>
+  <p><b>▶ <a href="assets/demo/falvorn-walkthrough.mp4">Watch the 41-second Falvorn AI product walkthrough (MP4)</a></b></p>
+</div>
+
+> **Demo provenance:** The dashboard in this video is rendered from this repository's real HTML/CSS, and the extraction view uses an actual `POST /v1/fetch` result against a synthetic localhost test page. The planner-event view is **explicitly illustrative**. Administrator restrictions in the recording environment blocked Chromium URL navigation, so the video does **not** claim successful autonomous browsing on a public website. The soundtrack is newly generated for this repository. GitHub reliably renders the preview GIF; MP4 playback is linked separately.
+
+## Why Falvorn?
+
+Falvorn AI is an **independent, self-hostable AI web-agent prototype** built as the foundation of a future web automation platform. It combines model-guided decisions, browser sessions, extraction, search and monitors behind one developer-facing API. It is not a 100% TinyFish replica, not an endorsed TinyFish product, and **not yet certified for production SaaS deployment**.
+
+### Four connected product modules
+
+| Product | What exists today | Code |
 |---|---|---|
-| **Falvorn Agent** | `falvorn/agent.py` | Goal-driven agent loop with optional model reasoning and run events |
-| **Falvorn Browser** | `falvorn/browser.py` | Local isolated Chromium contexts, DOM observation and restricted actions |
-| **Falvorn API** | `falvorn/api.py`, `falvorn/sdk.py`, `falvorn/mcp_server.py` | REST endpoints, Python client, optional local MCP adapter |
-| **Falvorn Core** | `falvorn/config.py`, `falvorn/models.py`, `falvorn/security.py` | Configuration, request validation and safety policies |
+| **Falvorn Agent** | Bounded goal-oriented loop, optional OpenAI-compatible planner, persisted runs/events, cancellation, event streaming | `falvorn/agent.py`, `falvorn/store.py` |
+| **Falvorn Browser** | Local isolated Chromium contexts, guarded navigation/actions, DOM snapshots and authenticated screenshot endpoint | `falvorn/browser.py` |
+| **Falvorn API** | REST/OpenAPI, Python SDK/CLI, optional MCP, HTML extraction, SearXNG adapter, monitors, dashboard | `falvorn/api.py`, `falvorn/sdk.py`, `falvorn/mcp_server.py` |
+| **Falvorn Core** | Pydantic models, configuration, API-key checks, domain/private-network filters | `falvorn/config.py`, `falvorn/security.py`, `falvorn/models.py` |
 
-**Project maturity:** v0.1 experimental MVP · not production certified · no production-scale parity claims.
+## ✨ Architecture
 
-**Project guides:** [Architecture](docs/architecture.md) · [Roadmap](docs/roadmap.md) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) · [GitHub setup](REPOSITORY_SETUP.md)
+<div align="center">
+<img src="assets/architecture.svg" alt="Animated Falvorn AI modular architecture" width="100%"/>
+</div>
 
-> **Independent, clean-room web automation MVP** — search, fetch, browser interaction, autonomous agent runs, and page-change checks. **Not affiliated with, endorsed by, or using the proprietary implementation of TinyFish.**
+The SVG above includes restrained CSS motion, with reduced-motion support. It is a **conceptual map of the current single-process implementation**, not a claim that a distributed worker fleet exists.
 
-![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white) ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white) ![Playwright](https://img.shields.io/badge/Browser-Playwright-2EAD33?logo=playwright&logoColor=white) ![Status](https://img.shields.io/badge/Status-Functional%20MVP-orange)
+See [Architecture & execution sequence](docs/architecture.md), [Threat model](docs/security/threat-model.md) and [Evaluation methodology](docs/benchmarks/evaluation.md).
 
-## Architecture
+## ✅ What works — and what doesn't yet
 
-```mermaid
-flowchart TD
-  U[Dashboard / API clients] --> A[FastAPI / API-key auth]
-  A --> S[Search adapter: SearXNG]
-  A --> F[Fetch: HTTPX + HTML parser]
-  A --> M[Monitor: SQLite hashes]
-  A --> J[Agent run manager + event log]
-  A --> B[Browser session manager]
-  J --> L[OpenAI-compatible reasoning endpoint]
-  J --> B
-  B --> P[Isolated Chromium / Playwright contexts]
-  P --> W[Permitted public websites]
-```
-
-## Included features (tested or implementable)
-
-| Capability | Current state | Notes |
+| Capability | v0.2 state | Important qualifier |
 |---|---|---|
-| Search | Implemented adapter | Configure a separate SearXNG service; search quality depends on its engines |
-| Fetch | Implemented | HTML/text to clean Markdown; optional JS-rendered fetch |
-| Browser | Implemented | Isolated local Chromium sessions, element-index actions; **not remote CDP** |
-| Agent | Implemented | Goal-driven planner; requires your OpenAI-compatible API key to act autonomously |
-| Monitor | Implemented | Manual content-hash checks stored in SQLite; not scheduled alerts |
-| Dashboard | Implemented | Responsive web UI with agent and extraction console |
-| API | Implemented | OpenAPI endpoints with API-key header |
-| Audit log | MVP | Run-level event logs in memory; no durable audit trail yet |
-| Vault | Not implemented | No secure credential management or authenticated-login workflow |
-| Python SDK / CLI | Implemented | Lightweight Python client and argparse CLI; not TinyFish API-compatible |
-| MCP server | Implemented adapter | Optional local stdio server with five tools; install `requirements-mcp.txt` |
-| Cloud/browser proxies | Not implemented | Runs Chromium locally; no managed remote CDP fleet |
-| Multi-tenancy / billing | Not implemented | Single deployment, one API key |
-| CAPTCHA / anti-bot bypass | Not implemented | Respect website access controls |
+| HTML/text fetch and clean Markdown | **Implemented** | SSRF checks need network-level hardening |
+| Dynamic/JS page extraction | **Implemented adapter** | Requires working Chromium on host |
+| Self-hosted search | **Implemented adapter** | Requires configured SearXNG service |
+| Agent LLM planning | **Implemented adapter** | Requires compatible LLM endpoint; otherwise snapshot-only |
+| Browser sessions/actions | **Implemented locally** | Live external-site success not verified here |
+| Browser screenshot | **Implemented** | Session must exist and request must be authorized |
+| Run/event persistence | **Implemented — single node** | SQLite WAL; restart marks active jobs `interrupted` |
+| Run cancellation/history | **Implemented — single process** | No distributed queue/replay |
+| Manual page change monitor | **Implemented** | SQLite content hashes |
+| Scheduled interval monitor | **Optional prototype** | Disabled by default; in-process only, no notifications |
+| Python SDK / CLI / stdio MCP | **Implemented adapters** | External integration contracts need further testing |
+| Private credential vault, hosted browser fleet | **Not implemented** | No unattended logins, browser marketplace or cloud scaling |
+| Multi-tenant organizations, billing, public SaaS | **Not implemented** | Do not deploy as a multi-user Internet product |
 
-This is **not a 100% replica** of TinyFish and is **not production-complete**. It is a functional, independently authored foundation for a competing platform. Public feature descriptions are reference points, not code dependencies.
+### 🧪 Validation snapshot
 
-## Quick start: local Python
+- **14 local tests passed** in the 2026-10-29 development environment (API, extraction, browser in-memory page and screenshots, SQLite recovery/subscriptions, URL policy).
+- `POST /v1/fetch` was exercised against a local synthetic HTTP server and returned verified structured content.
+- Live browser navigation was **blocked by this environment's browser administration policy**. Real-world website benchmarks and production deployment have **not** been verified.
+- Every claimed production feature must pass the [release gates](docs/roadmap.md) and [threat model](docs/security/threat-model.md).
+
+## 🚀 Quick start
+
+### Requirements
+
+Python 3.11+, Chromium/Playwright, and (for autonomous decisions) credentials for an **OpenAI-compatible model endpoint**. For standalone web search, configure SearXNG.
 
 ```bash
+git clone https://github.com/hossain0707/Falvorn-AI.git
+cd Falvorn-AI
 python -m venv .venv
-source .venv/bin/activate           # Windows: .venv\\Scripts\\activate
+source .venv/bin/activate                 # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
-# For machines without system Chromium:
 python -m playwright install chromium
-cp .env.example .env               # Windows: copy .env.example .env
-# Edit .env: FALVORN_API_KEY=... and LLM_API_KEY=... (optional).
-# For standalone search, set SEARXNG_URL to your SearXNG instance.
+cp .env.example .env                      # Windows: copy .env.example .env
+# Set FALVORN_API_KEY to a strong value; optionally set LLM_API_KEY and SEARXNG_URL
 python -m falvorn
 ```
 
-Open **http://127.0.0.1:8000** for the dashboard, or **http://127.0.0.1:8000/docs** for the Swagger API. `python -m falvorn` binds to loopback by default. If you configure an API key, paste it into the dashboard to authorize requests. Without `LLM_API_KEY`, agent runs return a real page snapshot, not a fake autonomous result. Without `SEARXNG_URL`, search returns 503 (an honest not-configured status).
+Open **http://127.0.0.1:8000** for the developer dashboard, or **http://127.0.0.1:8000/docs** for generated OpenAPI docs. The default bind is loopback. **Do not expose this prototype on a public interface.**
 
-### Docker Compose (bundled SearXNG)
+### Docker Compose — local-only prototype
 
 ```bash
 cp .env.example .env
-# Replace FALVORN_API_KEY with a strong random value.
-# Set LLM_API_KEY to enable autonomous agent planning.
-# Replace the SearXNG secret key in deploy/searxng.yml.
+# Edit .env to set a strong FALVORN_API_KEY and optional model configuration.
+# Set an adequate SearXNG secret in deploy/searxng.yml.
 docker compose up --build
 ```
 
-The bundled SearXNG container is configured automatically through Compose. The Compose deployment publishes only to **127.0.0.1:8000**. Set up an HTTPS reverse proxy with identity/access controls before using remotely. Do **not** expose the bare demo to the Internet.
+Compose binds the API to `127.0.0.1:8000` and persists local data to a Docker volume. The SearXNG image in this demo uses a floating tag; pin the image digest, review dependency licenses and harden network policy for any controlled deployment. The database and scheduler here are **not** suitable for horizontally scaled workers.
 
-## API examples
+## 🔌 API and SDK
 
 ```bash
-export FALVORN_API_KEY='the-secret-configured-in-.env'
+export FALVORN_API_KEY='your-local-api-key'
 
-# Read a page (server must have network access)
-curl -s http://127.0.0.1:8000/v1/fetch \
-  -H "X-API-Key: $FALVORN_API_KEY" -H 'Content-Type: application/json' \
+# Fetch and parse a page
+curl -s http://127.0.0.1:8000/v1/fetch \\
+  -H "X-API-Key: $FALVORN_API_KEY" -H 'Content-Type: application/json' \\
   -d '{"url":"https://example.com"}'
 
-# Execute a browser-agent task (requires model key for autonomous actions)
-curl -s http://127.0.0.1:8000/v1/agent/runs \
-  -H "X-API-Key: $FALVORN_API_KEY" -H 'Content-Type: application/json' \
-  -d '{"url":"https://example.com","goal":"Describe the main purpose of the page with evidence"}'
+# Start a read-only agent task
+curl -s http://127.0.0.1:8000/v1/agent/runs \\
+  -H "X-API-Key: $FALVORN_API_KEY" -H 'Content-Type: application/json' \\
+  -d '{"url":"https://example.com","goal":"Summarize this page with a source URL"}'
 
-# GET /v1/agent/runs/{run_id}
-# GET /v1/agent/runs/{run_id}/events   (server-sent events)
+# Get persisted run history, status and events
+# GET  /v1/agent/runs
+# GET  /v1/agent/runs/{id}
+# GET  /v1/agent/runs/{id}/events       (SSE)
+# POST /v1/agent/runs/{id}/cancel
 
-# Search via self-hosted SearXNG
-curl -s http://127.0.0.1:8000/v1/search \
-  -H "X-API-Key: $FALVORN_API_KEY" -H 'Content-Type: application/json' \
-  -d '{"query":"browser agent benchmarks"}'
+# Browser (within an authenticated, authorized session)
+# POST   /v1/browser/sessions
+# POST   /v1/browser/sessions/{sid}/actions
+# GET    /v1/browser/sessions/{sid}/screenshot
+# DELETE /v1/browser/sessions/{sid}
 
-# Page change check
-curl -s http://127.0.0.1:8000/v1/monitor/check \
-  -H "X-API-Key: $FALVORN_API_KEY" -H 'Content-Type: application/json' \
-  -d '{"url":"https://example.com"}'
+# Page-change monitoring
+# POST /v1/monitor/check
+# POST /v1/monitor/subscriptions
+# GET  /v1/monitor/subscriptions
 ```
 
-### Controlled browser sessions
-
-Create a session with `POST /v1/browser/sessions` and a `url`. Its response includes a generated `session_id` and an `observation` containing numbered elements. Use `POST /v1/browser/sessions/{session_id}/actions` with, for example, `{"action":"click","index":0}` or `{"action":"snapshot"}`. Actions operate on the current DOM, so indices may change across navigations. Finish using `DELETE /v1/browser/sessions/{session_id}`.
-
-### Python SDK and CLI
+Python SDK:
 
 ```python
 from falvorn.sdk import FalvornClient
-with FalvornClient(api_key="your-api-key") as client:
-    print(client.fetch("https://example.com"))
-    run = client.start_agent("https://example.com", "Summarize this page")
-    print(client.get_run(run["run_id"]))
+
+with FalvornClient(api_key="your-local-api-key") as api:
+    page = api.fetch("https://example.com")
+    print(page["title"])
+    task = api.start_agent("https://example.com", "Summarize this page")
+    print(api.get_run(task["run_id"]))
 ```
 
-```bash
-python -m falvorn.cli --key "$FALVORN_API_KEY" fetch https://example.com
-python -m falvorn.cli --key "$FALVORN_API_KEY" search "web agents"
-python -m falvorn.cli --key "$FALVORN_API_KEY" agent https://example.com "Summarize the page"
-```
-
-### MCP integration (optional)
+Optional MCP adapter (stdio):
 
 ```bash
 pip install -r requirements-mcp.txt
 python -m falvorn.mcp_server
 ```
 
-Configure your MCP host to launch `python -m falvorn.mcp_server` with `FALVORN_BASE_URL` and `FALVORN_API_KEY` in its environment. The host provides UI and confirmations; this server exposes tools, not authentication or secure browser profiles.
+For the MCP host set `FALVORN_BASE_URL` and `FALVORN_API_KEY`. Do not expose model or API credentials in screenshots or logs.
 
-## Safety defaults and limitations
+## 🛡 Security boundaries
 
-- **Private-network URLs and localhost are denied** unless `ALLOW_PRIVATE_TARGETS=true` is explicitly set for local tests. The command-line launcher refuses public binds with that flag enabled.
-- DNS resolution and navigation checks provide **defense in depth but are not sufficient protection against DNS rebinding, unsafe proxies, browser escape, or all SSRF variants**. For any production deployment, require network-level outbound restrictions, container/browser isolation, strict proxy rules, request quotas, and audit logs.
-- The agent treats webpage text as untrusted; this is **not a guarantee against prompt injection**. Restrict allowed domains, vet LLM output, and require approvals for real-world side effects.
-- Typing and button interactions are off by default. Some consequential button labels are blocked even if writes are enabled. This is a heuristic, not a complete policy engine. Avoid using on real financial/medical/government accounts.
-- Browser sessions exist only in process memory and are closed on shutdown. No persistent cookies, credential vault, distributed job queue, scheduled notifications, tenant isolation, or durable run records.
-- A single API key is suitable only for controlled single-user operation. Do not use as an Internet-facing multi-tenant service.
-- Automated workflows should respect privacy, permission, site terms, and robots/rate limits. No CAPTCHA-solving or stealth evasion is implemented.
+This is a *development foundation*, not a ready-to-sell managed browser platform. It uses one deployment-level API key, in-process browser contexts, and best-effort URL validation. Domain/DNS filters and button-label heuristics **are not adequate protection** against SSRF, DNS rebinding, browser escape, prompt injection, malicious websites or multi-user abuse. Avoid real credentials, private customer data, financial operations or high-stakes websites. See [SECURITY.md](SECURITY.md) and the [detailed threat model](docs/security/threat-model.md).
 
-## Validation
+### Development commands
 
 ```bash
-pip install -r requirements-dev.txt
-pytest -q
+python -m pip install -r requirements-dev.txt
+python -m playwright install chromium
+python -m pytest -q
+python -m compileall -q falvorn
 ```
 
-For a quick local interactive browser check, run `python tests/smoke_browser.py` to verify Chromium, DOM observations and action restrictions using an in-memory page (no network required). Live website navigation still needs separate validation on your actual deployment.
+The demonstration is reproducible with a synthetic local webpage, but `ALLOW_PRIVATE_TARGETS=true` must only be used on a trusted **loopback test setup**; never enable it on public-facing deployments.
 
-See **[PARITY.md](PARITY.md)** for a feature-by-feature public capability comparison.
+## 📚 Development documentation
 
-## Engineering roadmap to commercial feature parity
+| Document | Why it matters |
+|---|---|
+| [Architecture](docs/architecture.md) | Components, sequence diagram, persistence, failure recovery |
+| [Roadmap](docs/roadmap.md) | Implemented vs planned with exit criteria |
+| [Comparison](PARITY.md) | Honest capability parity and gaps |
+| [Security](SECURITY.md) | Disclosure and safety expectations |
+| [Threat model](docs/security/threat-model.md) | Trust boundaries and deployment gates |
+| [Benchmark methodology](docs/benchmarks/evaluation.md) | Evaluation design without invented scores |
+| [Contributing](CONTRIBUTING.md) | Development workflow and change review |
+| [Project memory](PROJECT_MEMORY.md) | Cross-chat handover and four module histories |
+| [Change log](CHANGELOG.md) | Release-by-release development history |
 
-1. **Harden core**: DNS pinning/network egress proxy, persistent event store, signed audit logs, browser-worker isolation, retry policy, cancellation/timeouts.
-2. **Agent reliability**: screenshot + DOM reasoning, accessibility tree, uncertainty handling, deterministic state machines, recovery from navigation and SPA changes.
-3. **Credentials**: KMS-backed vault with per-tenant secrets, redaction, consent flows and manual authentication boundaries.
-4. **Infrastructure**: distributed job queue, isolated Kubernetes browser fleet, CDP/WebSocket sessions, concurrency management, autoscaling, encrypted session persistence.
-5. **Developer ecosystem**: Python/TypeScript SDKs, CLI, MCP server, schema-first extraction, webhook integrations, scheduled monitoring.
-6. **SaaS operations**: organizations/RBAC, quotas, usage metering, billing, SIEM telemetry, rate limits, on-call playbooks, accessibility, incident response.
-7. **Benchmarks**: transparent repeatable evaluations on Online-Mind2Web / BrowserGym / realistic private task sets; report success/latency/cost, not marketing-equivalent claims.
+## © Ownership and license
 
-## Scope and ownership
+**Copyright © 2026 Md Najmul Hossain. All rights reserved.** The Falvorn AI original implementation, brand assets and documentation are **proprietary**. Merely viewing a public repository is **not** a grant of open-source or commercial reuse rights. Copying, modification, distribution, hosting or commercial use requires the copyright holder's written authorization, except where applicable law permits. Third-party dependencies keep their own licenses. Read [LICENSE](LICENSE).
 
-This code is authored independently and does not contain or require TinyFish proprietary code. It does not claim interface, API, brand, model, reliability, or benchmark equivalence. Before commercial launch, perform a license review for every dependency and run a full security assessment.
+---
 
-## Licensing
+<div align="center">
 
-No open-source license has been selected for this codebase. Until the owner chooses one, do not assume permission to redistribute or commercially reuse the code. This repository also depends on separately licensed third-party packages; audit their terms before distribution.
+**FALVORN AI**  
+*Intelligence without limits · Built to earn trust through evidence*
+
+Maintained by **[Md Najmul Hossain](https://github.com/hossain0707)** · [GitHub repository](https://github.com/hossain0707/Falvorn-AI)
+
+</div>

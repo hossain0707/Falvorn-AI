@@ -1,25 +1,19 @@
-# PROJECT_MEMORY_YYYY-MM-DD — <project or module>
+# PROJECT_MEMORY_YYYY-MM-DD — <scope>
 
-> Asia/Seoul date: YYYY-MM-DD | Entry: HH:MM KST | Scope: <module(s)> | Evidence: <commit/PR/diff/source>
+> Korea-local date and time: YYYY-MM-DD HH:MM KST · Commit/PR/local archive: <ref> · Record type: <baseline/implementation/fix>
 
-## Changes made
-- [State observable implementation changes, removals and fixes; or an explicitly labeled initial baseline.]
+## Source modifications (or historical baseline)
+- <Affected paths and observable behavior>
 
-## Tests and validation
-- **Executed now:** <commands and results, or "Not run for this documentation-only change">
-- **Prior reported evidence:** <if applicable; label historical>
-- **Unverified:** <what has not been demonstrated>
+## Evidence / tests executed now
+- <Exact command, result and environment>
 
-## Decisions
-- <Decision, justification, trade-offs>
+## Unverified / risk
+- <Limitations; no invented capabilities>
 
-## Known limitations / risks
-- <Security, architecture, functional, compliance>
+## Decisions and next work
+- <Tradeoffs, owner, tasks and completion criteria>
 
-## Pending work / next action
-- [ ] <Concrete task and completion criterion>
-
-## GitHub and ChatGPT Project Sources
-- Remote write approved for this change? <yes/no; scope>
-- ChatGPT Project → Sources updated? <only state yes if the user confirmed it>
-- Never include secrets or claim automatic synchronization.
+## Remote authorization
+- <Whether user specifically approved this remote write>
+- <ChatGPT Project Sources are NOT automatically synchronized>

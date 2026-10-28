@@ -1,43 +1,58 @@
-# Falvorn AI architecture
+# Falvorn AI — Engineering architecture v0.2
 
-## Current system (v0.1)
+![Animated architecture diagram](../assets/architecture.svg)
 
-```mermaid
-flowchart TD
-    U[User / API client / dashboard] --> API[Falvorn API - FastAPI]
-    API --> AG[Falvorn Agent - goal planner]
-    API --> BR[Falvorn Browser - Playwright contexts]
-    API --> EX[Search and Fetch adapters]
-    API --> MO[Manual content hash monitor]
-    AG --> LL[External OpenAI-compatible LLM]
-    AG --> BR
-    BR --> WEB[Allowlisted public websites]
-    EX --> WEB
-    API --> CO[Falvorn Core - config, models, security]
-```
+## System boundary
 
-This is a **modular monolith**, not four independently deployable services. The four names are product/component boundaries: `falvorn/agent.py`, `falvorn/browser.py`, `falvorn/api.py`, and shared modules (`falvorn/config.py`, `models.py`, `security.py`). Keep them together while contracts and user demand evolve.
+Falvorn AI v0.2 is a **single-process, single-node modular monolith**, not a distributed SaaS. Four conceptual modules correspond to Python files: Agent (`agent.py`), Browser (`browser.py`), API (`api.py`, `sdk.py`, `mcp_server.py`), and Core (`config.py`, `models.py`, `security.py`, `store.py`). The UI is served as local static HTML. SQLite records agent run state and events as well as page-change monitor subscriptions.
 
-## Trust boundaries
-
-1. **User → API:** API key authentication is appropriate only for controlled single-user environments.
-2. **API → web targets:** syntax, domain and public-IP checks restrict the most obvious unsafe requests, but network isolation is still missing.
-3. **Webpage → reasoning model:** website content is untrusted, may contain prompt injection, and must never override user/task policy.
-4. **Model → browser actions:** validate action schema and prohibit default writes and consequential side effects.
-5. **Browser → host:** Playwright contexts share infrastructure; harden with separate workers and outbound policies before commercial use.
-
-## Planned deployment structure
+### Execution sequence
 
 ```mermaid
-flowchart LR
-    GUI[Dashboard / SDK / MCP] --> G[API gateway + auth]
-    G --> Q[Durable job queue]
-    Q --> O[Agent orchestration]
-    O --> F[Isolated browser worker fleet]
-    O --> LM[Model gateway]
-    F --> W[Web]
-    O --> DB[(Runs + event logs)]
-    O --> V[(Credential vault - future)]
+sequenceDiagram
+    autonumber
+    participant U as User or SDK
+    participant API as Falvorn API
+    participant S as SQLite run store
+    participant A as Agent planner
+    participant B as Playwright browser
+    participant L as Model API (optional)
+    U->>API: POST /v1/agent/runs (url, goal)
+    API->>S: Persist run id, queued
+    API-->>U: 202 Accepted + run id
+    API->>A: Run async task (single-process)
+    A->>S: Record running + step events
+    A->>B: Create bounded isolated session
+    B-->>A: Current DOM observation
+    opt Model configured
+      A->>L: Planner request with untrusted page observation
+      L-->>A: Validated action JSON
+      A->>B: Allowed browser action
+    end
+    A->>S: Persist result / blocked / failed / cancelled
+    A->>B: Close browser session
+    U->>API: GET run and event history
+    API->>S: Read persisted state
+    API-->>U: Structured result and trace
 ```
 
-This second diagram is a **target architecture**, not currently implemented. For feature availability and benchmarks see [roadmap](roadmap.md) and [PARITY](../PARITY.md).
+## Operational model
+
+| Concern | Current implementation | Production requirement |
+| --- | --- | --- |
+| Browser isolation | One Playwright context per session; in-process Chromium | Dedicated worker containers, strict isolation, egress proxy, quotas |
+| Reasoning | Optional OpenAI-compatible API | Evaluation, model routing, cost limits, prompt-injection defense |
+| Persistence | SQLite WAL for events and monitor subscriptions | Postgres + durable queue for multi-worker deployment |
+| Async work | In-process `asyncio` tasks, cancellable | Multi-process scheduling, distributed locks, drain/reshard handling |
+| Monitoring | Manual checks; optional single-process interval scheduler | Dedicated scheduled worker, retries, alert delivery, rate limits |
+| Identity | One API key | Tenant isolation, RBAC, SSO, approvals and audit |
+| API contract | FastAPI OpenAPI and Python client | Backward compatibility policy, contract tests and versioned SDKs |
+| Observability | JSON events exposed by API | Structured metrics, centralized tracing and redaction |
+
+### Trust and safety boundaries
+
+Browser content is untrusted and must not override system/user goals. HTTP navigation is validated against blocked/private targets, but DNS resolution may change after validation: **network-level egress filtering is mandatory before public hosting**. Current sensitive-field and consequential-click restrictions are heuristic and not a complete guarantee. Browser screenshots can contain personal data: access is gated by API auth and must not be logged or redistributed. See [threat model](security/threat-model.md).
+
+### Failure recovery
+
+On application restart, previously `queued`/`running` runs are marked `interrupted`, preserving the event trail without falsely restarting an unknown side-effecting action. Monitor subscriptions persist, but only execute when `MONITOR_SCHEDULER_ENABLED=true` and the one application worker is running. Scaling to multiple workers with this scheduler is unsupported.

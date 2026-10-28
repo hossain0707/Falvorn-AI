@@ -1,21 +1,18 @@
-# <Module name> — CURRENT
+# <MODULE> CURRENT
 
-> Updated: YYYY-MM-DD (Asia/Seoul) | State: implemented / partial / planned
+> Updated: YYYY-MM-DD Asia/Seoul · Current maturity: <state>
 
-## Owned source files
-- `falvorn/...`
+## Owned source
+- <paths>
 
-## Verified present functionality
-- <From actual source, with limits>
+## Implemented and verified
+- <code features with evidence>
 
-## Known limitations and risks
-- <Accurate and specific>
+## Limitations and risks
+- <specific>
 
-## Latest dated history
+## Latest changes
 - [PROJECT_MEMORY_YYYY-MM-DD.md](PROJECT_MEMORY_YYYY-MM-DD.md)
 
 ## Next actions
-- [ ] <Measurable task>
-
-## Cross-module dependencies
-- <References to other modules>
+- [ ] <task with acceptance criterion>

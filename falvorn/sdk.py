@@ -33,8 +33,20 @@ class FalvornClient:
     def get_run(self, run_id: str):
         return self._call("GET", f"/v1/agent/runs/{run_id}")
 
+    def list_runs(self, limit: int = 30):
+        return self._call("GET", f"/v1/agent/runs?limit={limit}")
+
+    def cancel_run(self, run_id: str):
+        return self._call("POST", f"/v1/agent/runs/{run_id}/cancel")
+
     def monitor(self, url: str, key: str | None = None):
         return self._call("POST", "/v1/monitor/check", {"url": url, "key": key})
+
+    def subscribe_monitor(self, url: str, interval_seconds: int = 3600):
+        return self._call("POST", "/v1/monitor/subscriptions", {"url": url, "interval_seconds": interval_seconds})
+
+    def list_monitors(self):
+        return self._call("GET", "/v1/monitor/subscriptions")
 
     def create_browser(self, url: str):
         return self._call("POST", "/v1/browser/sessions", {"url": url})

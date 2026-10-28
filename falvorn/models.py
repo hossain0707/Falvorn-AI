@@ -39,3 +39,7 @@ class AgentDecision(BaseModel):
     url: str | None = None
     text: str | None = None
     answer: Any | None = None
+
+class MonitorSubscriptionRequest(BaseModel):
+    url: str
+    interval_seconds: int = Field(3600, ge=300, le=604800)

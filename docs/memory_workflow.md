@@ -1,18 +1,10 @@
-# Project memory and ChatGPT continuity
+# Project Memory Manager — implementation guide
 
-Falvorn AI uses [Project Memory Manager v1.0](../.agents/skills/falvorn-project-memory/SKILL.md). The purpose is to preserve **engineering continuity**, not to imply that ChatGPT automatically observes repositories or edits Project Sources.
+Project-wide and per-module journal files are human-readable Markdown. Update the root `PROJECT_MEMORY.md`, the top-level dated journal, and each affected module's current and dated logs after an actual code change, with explicit user authorization for GitHub publication.
 
-## In a new ChatGPT conversation
-Read this repository's [PROJECT_MEMORY.md](../PROJECT_MEMORY.md), [AGENTS.md](../AGENTS.md), the appropriate module `CURRENT.md`, the most recent dated entries and actual source code. Treat code and recent verified GitHub history as the authority if memory prose is outdated.
-
-## After meaningful development
-Prepare an updated project-wide journal entry plus separate entries for each affected module. For example, a change to browser navigation and safety URL checks impacts **browser** and **core**, so both must receive a dated entry. Never create journal spam when nothing changed.
-
-## ChatGPT Project Sources
-The canonical cross-chat handover is the complete repository-root **PROJECT_MEMORY.md**. The user can download or copy it into **ChatGPT Project → Sources** and replace the earlier copy after major approved changes. **No tool action in this workflow silently updates Project Sources.** A different ChatGPT conversation does not necessarily have live knowledge of a new GitHub commit until it reads it.
-
-## GitHub write policy
-Reading is fine. For each publication to GitHub, ask for explicit permission describing the files, repository and intended change; do **not** turn on scheduled journal commits, GitHub Actions push writers, auto-merge or deployment. If a user only asked for a memory draft, keep it local.
-
-## Quality bar
-Each entry must specify exact date (Asia/Seoul), changed paths, evidence, what works, what is unverified, tests executed now versus historical reports, security limitations, decisions and next tasks. Keep sensitive data out of public repositories.
+1. Read `AGENTS.md`, latest GitHub state and source code; compare the actual changes.
+2. Classify changed modules (Agent/Browser/API/Core) and collect tests/evidence.
+3. Use Asia/Seoul calendar date; append new entries on an existing day instead of overwriting previous development records.
+4. Distinguish verified implementation, reported historical tests, failed checks and outstanding tasks.
+5. Commit or deploy **only** with explicit approval. Do not enable an automatic writer or push via CI.
+6. Optionally upload root `PROJECT_MEMORY.md` manually to the user's ChatGPT Project → Sources to improve cross-chat handovers; Github and ChatGPT Sources are not automatically synced.

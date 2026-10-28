@@ -1,4 +1,4 @@
-name: CI
+name: Falvorn CI (read-only tests)
 on:
   push:
     branches: [main]
@@ -8,25 +8,28 @@ on:
 permissions:
   contents: read
 jobs:
-  tests:
-    name: Unit tests / Python ${{ matrix.python-version }}
+  unit:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.11', '3.12']
+        python-version: ['3.11','3.12','3.13']
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-      - name: Install development requirements
+      - name: Install dependencies
         run: python -m pip install -r requirements-dev.txt
-      - name: Bytecode compile
+      - name: Install Chromium browser
+        run: python -m playwright install --with-deps chromium
+      - name: Compile source
         run: python -m compileall -q falvorn
-      - name: Test API, parsing, and safety policies
+      - name: Run tests
         run: python -m pytest -q
         env:
           ALLOW_PRIVATE_TARGETS: 'false'
           FALVORN_API_KEY: ''
+          MONITOR_SCHEDULER_ENABLED: 'false'
+  # Intentionally no automated commits, memory writer, deploy or releases.

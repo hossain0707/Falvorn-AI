@@ -1,27 +1,23 @@
 # Falvorn Agent — CURRENT
 
-> Revision: 2026-10-29.1 · Asia/Seoul · Status: **Initial implementation** · Last source baseline: `6f17f8fdd1b4e3686b4ff22c56c6718f47f158f5`
+> 2026-10-29 (Asia/Seoul) · v0.2 **local release candidate**, not verified production
 
-## Owned source
+## Owned files
 - `falvorn/agent.py`
+- `falvorn/store.py`
 
-## Implemented / source-observed
-- Goal-driven, bounded planner/executor in `falvorn/agent.py`.
-- Optional OpenAI-compatible JSON action planning via configured LLM endpoint; without an LLM key, returns a real snapshot rather than inventing autonomous results.
-- Run IDs, statuses, in-memory events, completion/block/failure handling; SSE events are exposed by the API.
-- Task-scoped browser sessions, maximum step limits, and restrictive handling of actions.
+## Implemented/source-observed
+- Bounded goal-to-action planner with optional OpenAI-compatible endpoint
+- SQLite-backed run lifecycle and event history
+- Async cancellation endpoint; SSE event streaming
 
-## Limitations / validation gaps
-- Run state and audit events are in memory only; no persistent task queue, retry/resume, distributed workers, or verified large-scale task success.
-- Webpage prompt-injection resilience has not been independently established; no screenshot/accessibility planner or benchmark suite.
+## Gaps
+- No reliable resume/replay or distributed queue
+- No multi-site live-agent benchmark; prompt-injection protection incomplete
 
 ## Next actions
-- [ ] Define reproducible task datasets and success assertions.
-- [ ] Persist run events; add cancellation, retries, idempotency, and replay.
-- [ ] Evaluate model routing and adversarial webpage instructions.
+- [ ] Benchmark task success/failures and model routing
+- [ ] Build durable queue, retry policy, idempotency
 
-## Current dated journal
-- [PROJECT_MEMORY_2026-10-29.md](PROJECT_MEMORY_2026-10-29.md)
-
-## Maintenance
-When this module's code actually changes, prepare a dated entry using [template](../../templates/DAILY_ENTRY.md) and update this file and root [project handover](../../../PROJECT_MEMORY.md). For a no-change day, do nothing. No automatic GitHub writes/deployments.
+## Journal
+[PROJECT_MEMORY_2026-10-29.md](PROJECT_MEMORY_2026-10-29.md)
