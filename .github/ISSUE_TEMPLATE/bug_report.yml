@@ -1,0 +1,32 @@
+name: Bug report
+description: Report reproducible unexpected behavior
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "Do not paste API keys, credentials, session cookies, or private website data."
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What failed?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Use a public test page or a minimal redacted example.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected versus actual behavior
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Python 3.12, Docker Desktop, etc.

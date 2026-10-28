@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest a Falvorn capability
+labels: [enhancement]
+body:
+  - type: textarea
+    id: use_case
+    attributes:
+      label: User problem
+      description: What real user workflow would this improve?
+    validations:
+      required: true
+  - type: textarea
+    id: design
+    attributes:
+      label: Proposed behavior and acceptance criteria
+    validations:
+      required: true
+  - type: textarea
+    id: security
+    attributes:
+      label: Permissions, privacy, and security concerns

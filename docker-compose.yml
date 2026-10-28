@@ -1,0 +1,23 @@
+services:
+  falvorn:
+    build: .
+    env_file: .env
+    environment:
+      SEARXNG_URL: http://searxng:8080
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - falvorn_data:/app/data
+    shm_size: "512mb"
+    restart: unless-stopped
+    depends_on:
+      - searxng
+  searxng:
+    image: searxng/searxng:latest
+    environment:
+      - SEARXNG_BASE_URL=http://searxng:8080/
+    volumes:
+      - ./deploy/searxng.yml:/etc/searxng/settings.yml:ro
+    restart: unless-stopped
+volumes:
+  falvorn_data:

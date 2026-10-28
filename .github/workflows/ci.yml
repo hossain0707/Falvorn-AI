@@ -1,0 +1,32 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    name: Unit tests / Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install development requirements
+        run: python -m pip install -r requirements-dev.txt
+      - name: Bytecode compile
+        run: python -m compileall -q falvorn
+      - name: Test API, parsing, and safety policies
+        run: python -m pytest -q
+        env:
+          ALLOW_PRIVATE_TARGETS: 'false'
+          FALVORN_API_KEY: ''
