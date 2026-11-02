@@ -9,9 +9,12 @@ Dates use Asia/Seoul. `CURRENT.md` is a living module handover; dated journals p
 | Browser | [CURRENT](modules/browser/CURRENT.md) | [2026-10-29](modules/browser/PROJECT_MEMORY_2026-10-29.md) |
 | API | [CURRENT](modules/api/CURRENT.md) | [2026-10-29](modules/api/PROJECT_MEMORY_2026-10-29.md) |
 | Core | [CURRENT](modules/core/CURRENT.md) | [2026-10-29](modules/core/PROJECT_MEMORY_2026-10-29.md) |
+| Social product | [CURRENT](modules/social/CURRENT.md) | [2026-11-02](modules/social/PROJECT_MEMORY_2026-11-02.md) |
 
 **Routing:** `agent.py` → Agent. `browser.py` → Browser. `api.py`, `sdk.py`, `cli.py`, `mcp_server.py`, `extract.py`, `static/` → API. `config.py`, `security.py`, `models.py`, `store.py` → Core (run-store also affects Agent and monitoring).
 
 Remote publication and ChatGPT Project Sources updates are manual/explicitly authorized only. See [the repository memory skill](../.agents/skills/falvorn-project-memory/SKILL.md) and [template](templates/DAILY_ENTRY.md).
 
 **Sync rule:** When a meaningful change is explicitly approved for GitHub publication, refresh both `../PROJECT_MEMORY.md` and `project_memory/PROJECT_MEMORY.md` in the same commit. Nothing updates ChatGPT Project Sources automatically.
+
+**Social product route:** `products/social-orchestrator/` is an isolated beta and maintains `modules/social/CURRENT.md`; its scheduled jobs and provider secrets do not belong to the root browser agent.

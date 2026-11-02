@@ -1,0 +1,25 @@
+name: Falvorn Social - tests
+on:
+  push:
+    paths:
+      - 'products/social-orchestrator/**'
+  pull_request:
+    paths:
+      - 'products/social-orchestrator/**'
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: products/social-orchestrator
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: products/social-orchestrator/requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+      - run: python -m compileall -q app
+      - run: pytest -q

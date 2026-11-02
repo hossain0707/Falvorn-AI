@@ -1,0 +1,26 @@
+services:
+  api:
+    build: .
+    env_file: .env
+    ports:
+      - "127.0.0.1:8050:8050"
+    volumes:
+      - social-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8050/health',timeout=3)"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+  worker:
+    build: .
+    command: ["python", "-m", "app.worker"]
+    env_file: .env
+    volumes:
+      - social-data:/data
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  social-data:

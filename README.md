@@ -26,6 +26,10 @@
 
 > **Demo provenance:** The dashboard in this video is rendered from this repository's real HTML/CSS, and the extraction view uses an actual `POST /v1/fetch` result against a synthetic localhost test page. The planner-event view is **explicitly illustrative**. Administrator restrictions in the recording environment blocked Chromium URL navigation, so the video does **not** claim successful autonomous browsing on a public website. The soundtrack is newly generated for this repository. GitHub reliably renders the preview GIF; MP4 playback is linked separately.
 
+## New product: Falvorn Social Orchestrator (2026-11-02)
+
+**[Explore the human-approved social media operations agent](products/social-orchestrator/README.md)** — source-linked news signals, brand-aware drafting (optional model / labeled template fallback), real PNG/MP4 creative rendering, human approval, scheduled dispatch and signed Meta messaging webhook. Official Instagram, LinkedIn and YouTube adapters are available but **require owner credentials and live testing**. Publishing defaults to dry-run; this is an engineering beta, not certified SaaS. The independent product is isolated in `products/social-orchestrator/`; it does not alter Falvorn's existing four core modules.
+
 ## Why Falvorn?
 
 Falvorn AI is an **independent, self-hostable AI web-agent prototype** built as the foundation of a future web automation platform. It combines model-guided decisions, browser sessions, extraction, search and monitors behind one developer-facing API. It is not a 100% TinyFish replica, not an endorsed TinyFish product, and **not yet certified for production SaaS deployment**.

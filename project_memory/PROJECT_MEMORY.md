@@ -1,6 +1,6 @@
 # Falvorn AI — canonical project handover
 
-> **Snapshot:** 2026-10-29 (Asia/Seoul) · **Published release:** [v0.2.0](https://github.com/hossain0707/Falvorn-AI/releases/tag/v0.2.0). Release and binary assets verified on GitHub; code/media branch baseline `a6b58f7ef1f1831cf5399ebba745945336698d3f`. Verify the live repository before making subsequent claims.
+> **Snapshot:** 2026-11-02 (Asia/Seoul) · **Published release:** [v0.2.0](https://github.com/hossain0707/Falvorn-AI/releases/tag/v0.2.0). Release and binary assets verified on GitHub; code/media branch baseline `a6b58f7ef1f1831cf5399ebba745945336698d3f`. Verify the live repository before making subsequent claims.
 
 ## Identity
 
@@ -31,10 +31,10 @@ Earlier source included a bounded optional LLM planner, local Chromium/Playwrigh
 
 ## Module handovers
 
-- [Agent](modules/agent/CURRENT.md): optional LLM planner, bounded loops, durable run/event history, cancel and basic SSE.
-- [Browser](modules/browser/CURRENT.md): Playwright contexts, guarded actions/URLs, DOM and screenshot snapshot.
-- [API](modules/api/CURRENT.md): FastAPI, SDK, MCP, extraction, search adapter, subscriptions and UI.
-- [Core](modules/core/CURRENT.md): config, Pydantic models, URL policy, single-node SQLite store.
+- [Agent](project_memory/modules/agent/CURRENT.md): optional LLM planner, bounded loops, durable run/event history, cancel and basic SSE.
+- [Browser](project_memory/modules/browser/CURRENT.md): Playwright contexts, guarded actions/URLs, DOM and screenshot snapshot.
+- [API](project_memory/modules/api/CURRENT.md): FastAPI, SDK, MCP, extraction, search adapter, subscriptions and UI.
+- [Core](project_memory/modules/core/CURRENT.md): config, Pydantic models, URL policy, single-node SQLite store.
 
 ## Safety/reliability gaps that must not be overstated
 
@@ -50,9 +50,17 @@ No production-grade DNS-pinned egress firewall, secure vault, tenancy, distribut
 
 ## Continuous documentation convention
 
-Read [AGENTS.md](../AGENTS.md) and [project_memory index](README.md). Each approved meaningful change should update the project journal and every affected module's dated journal and `CURRENT.md`. No-change days do not produce empty files. Project Sources in ChatGPT only update when user manually uploads a refreshed `PROJECT_MEMORY.md`; a repo commit does not itself update Sources.
+Read [AGENTS.md](AGENTS.md) and [project_memory index](project_memory/README.md). Each approved meaningful change should update the project journal and every affected module's dated journal and `CURRENT.md`. No-change days do not produce empty files. Project Sources in ChatGPT only update when user manually uploads a refreshed `PROJECT_MEMORY.md`; a repo commit does not itself update Sources.
 
 ## Project memory folder mirror
 
-- A **reviewed copy** of this handover is maintained at [project_memory/PROJECT_MEMORY.md](PROJECT_MEMORY.md) to keep the module histories and master snapshot together.
+- A **reviewed copy** of this handover is maintained at [project_memory/PROJECT_MEMORY.md](project_memory/PROJECT_MEMORY.md) to keep the module histories and master snapshot together.
 - The root `PROJECT_MEMORY.md` remains canonical. Both copies must be updated together on **explicitly approved** documentation changes; there is no automatic synchronization or background GitHub writer.
+
+## 2026-11-02 — Falvorn Social Orchestrator engineering beta
+
+- User explicitly asked to build the social media management AI agent described by the Instagram reel and **push it to GitHub**. Authorized remote write in this conversation; no standing authorization for future pushes.
+- New **isolated product** at `products/social-orchestrator/` (not modifying the root four-module browser agent): single-admin FastAPI app, SQLite WAL approval/review state machine, separate one-worker scheduled dispatcher, official Instagram/LinkedIn/YouTube adapters, signed Meta message ingest, human-reviewed replies, Google News RSS source links, optional OpenAI-compatible text adapter, clearly labeled fallback, actual PNG + FFmpeg MP4 media and responsive dashboard.
+- Security default `SOCIAL_DRY_RUN=true`; no credentials committed. Live platform OAuth/API delivery not exercised; YouTube uploads default to private; single-admin key not suitable for public multi-tenant SaaS. Local backend and JS verification performed; **11 pytest tests passed**; actual 6-second MP4 rendered locally. Docker packaging and CI workflow added.
+- Reference: [Product README](products/social-orchestrator/README.md), [integration constraints](products/social-orchestrator/docs/INTEGRATIONS.md), [threat model](products/social-orchestrator/docs/THREAT_MODEL.md), [social module handover](project_memory/modules/social/CURRENT.md).
+- Still required: live provider sandbox tests and credentials, stronger tenant auth + OAuth refresh, durable distributed queue for scale, browser/device smoke tests and external security review. Do not describe as validated production SaaS.
