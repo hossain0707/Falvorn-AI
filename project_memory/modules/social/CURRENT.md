@@ -9,7 +9,7 @@
 - Draft→approval→schedule/publish state machine with atomic SQLite WAL claims, single separate worker, audit log, dry-run default.
 - LinkedIn text post, Instagram image/reels and YouTube private-video upload adapters; signed Meta messaging webhook, deduplicated inbox and manually approved replies.
 - Responsive static dashboard with a non-persisted API-key field, Docker Compose loopback, CI workflow and API/security/integration guides.
-- **Evidence:** 11 local automated tests passed; Python compile and JS syntax passed. No authenticated live platform API test or hosted public deployment verified.
+- **Evidence:** 12 local automated tests passed; Python compile and JS syntax passed. No authenticated live platform API test or hosted public deployment verified.
 
 ## Safety / limitations
 

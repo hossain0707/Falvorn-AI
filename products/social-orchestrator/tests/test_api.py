@@ -152,5 +152,12 @@ def test_integrations_reject_missing_credentials_and_local_urls(setup):
     live=replace(settings,dry_run=False,linkedin_token='',meta_token='',youtube_token='')
     with pytest.raises(IntegrationError,match='LINKEDIN'):
         publish_post(live,{'platform':'linkedin','body':'Test','id':'test-id'})
-    for url in ['http://example.com/abc.png','https://localhost/img.png','https://127.0.0.1/image.png']:
+    for url in ['http://example.com/abc.png','https://localhost/img.png','https://127.0.0.1/image.png','https://192.168.1.10/secret.png','https://[::1]/a.jpg']:
         with pytest.raises(IntegrationError):ensure_https(url)
+
+
+def test_known_example_key_is_rejected(tmp_path):
+    settings=replace(Settings.from_env(),api_key='CHANGE_ME_TO_RANDOM_STRING_LONGER_THAN_24_CHARS',
+                     db_path=str(tmp_path/'db.sqlite'),media_dir=str(tmp_path/'media'))
+    with pytest.raises(RuntimeError,match='SOCIAL_API_KEY'):
+        make_app(settings)

@@ -2,6 +2,7 @@
 import hashlib
 import hmac
 import html
+import ipaddress
 import json
 import re
 import subprocess
@@ -24,6 +25,11 @@ def ensure_https(url):
         raise IntegrationError('A publicly reachable HTTPS media URL is required')
     if u.hostname in ('localhost','127.0.0.1','::1') or u.hostname.endswith(('.local','.internal')):
         raise IntegrationError('Private/local media URL not allowed')
+    try:
+        if not ipaddress.ip_address(u.hostname).is_global:
+            raise IntegrationError('Private/local media URL not allowed')
+    except ValueError:
+        pass
     return url
 
 

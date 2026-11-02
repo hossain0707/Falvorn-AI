@@ -47,7 +47,7 @@ class Settings:
         )
 
     def validate(self):
-        if len(self.api_key) < 24:
+        if len(self.api_key) < 24 or self.api_key.startswith('CHANGE_ME'):
             raise RuntimeError('SOCIAL_API_KEY must be configured with at least 24 characters')
         Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
         Path(self.media_dir).mkdir(parents=True, exist_ok=True)
