@@ -10,4 +10,3 @@ Read `PROJECT_MEMORY.md`, `project_memory/README.md`, the latest module `CURRENT
 - The repository skill at `.agents/skills/falvorn-project-memory/SKILL.md` guides compatible coding agents; it is not automatically installed as a global ChatGPT skill.
 - Application runtime state and project-development memory are distinct things. SQLite records runtime events; Markdown records engineering history.
 
-- **New isolated product (2026-11-02):** `products/social-orchestrator/` is an engineering beta. Use `project_memory/modules/social/CURRENT.md` for its scope and dated history; keep the separate API, key space, scheduled worker and integration status distinct from the original four modules. Do not claim external social publishing is validated without real API integration tests.

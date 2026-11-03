@@ -1,6 +1,6 @@
 # Falvorn AI — canonical project handover
 
-> **Snapshot:** 2026-11-02 (Asia/Seoul) · **Published release:** [v0.2.0](https://github.com/hossain0707/Falvorn-AI/releases/tag/v0.2.0). Release and binary assets verified on GitHub; code/media branch baseline `a6b58f7ef1f1831cf5399ebba745945336698d3f`. Verify the live repository before making subsequent claims.
+> **Snapshot:** 2026-11-03 (Asia/Seoul) · **Published release:** [v0.2.0](https://github.com/hossain0707/Falvorn-AI/releases/tag/v0.2.0). Release and binary assets verified on GitHub; code/media branch baseline `a6b58f7ef1f1831cf5399ebba745945336698d3f`. Verify the live repository before making subsequent claims.
 
 ## Identity
 
@@ -57,12 +57,9 @@ Read [AGENTS.md](AGENTS.md) and [project_memory index](project_memory/README.md)
 - A **reviewed copy** of this handover is maintained at [project_memory/PROJECT_MEMORY.md](project_memory/PROJECT_MEMORY.md) to keep the module histories and master snapshot together.
 - The root `PROJECT_MEMORY.md` remains canonical. Both copies must be updated together on **explicitly approved** documentation changes; there is no automatic synchronization or background GitHub writer.
 
-## 2026-11-02 — Falvorn Social Orchestrator engineering beta
 
-- User explicitly asked to build the social media management AI agent described by the Instagram reel and **push it to GitHub**. Authorized remote write in this conversation; no standing authorization for future pushes.
-- New **isolated product** at `products/social-orchestrator/` (not modifying the root four-module browser agent): single-admin FastAPI app, SQLite WAL approval/review state machine, separate one-worker scheduled dispatcher, official Instagram/LinkedIn/YouTube adapters, signed Meta message ingest, human-reviewed replies, Google News RSS source links, optional OpenAI-compatible text adapter, clearly labeled fallback, actual PNG + FFmpeg MP4 media and responsive dashboard.
-- Security default `SOCIAL_DRY_RUN=true`; no credentials committed. Live platform OAuth/API delivery not exercised; YouTube uploads default to private; single-admin key not suitable for public multi-tenant SaaS. Local backend and JS verification performed; **12 pytest tests passed**; actual 6-second MP4 rendered locally. Docker packaging and CI workflow added.
-- Reference: [Product README](products/social-orchestrator/README.md), [integration constraints](products/social-orchestrator/docs/INTEGRATIONS.md), [threat model](products/social-orchestrator/docs/THREAT_MODEL.md), [social module handover](project_memory/modules/social/CURRENT.md).
-- Still required: live provider sandbox tests and credentials, stronger tenant auth + OAuth refresh, durable distributed queue for scale, browser/device smoke tests and external security review. Do not describe as validated production SaaS.
+## 2026-11-03 — Separate repository correction
 
-- **Security follow-up on 2026-11-02:** startup rejects the published example API key; media URL validation rejects private/non-global IP literals. Local regression suite: **12 tests passed**. This is additional hardening, not an independent security certification.
+- The Social Media Automation Agent has been migrated to the independent [hossain0707/Social-media-automation-agent](https://github.com/hossain0707/Social-media-automation-agent) repository. Its application source, CI workflow and module-specific documentation were removed from Falvorn AI's current tree following the user's clarification.
+- Falvorn AI's original four product modules and source files were not changed in this correction. Historical commits remain available in Git history, but the social agent is no longer a Falvorn AI repository module.
+- Standalone social agent validation: 12 local tests passed on 2026-11-03; third-party live publishing and production SaaS readiness are not verified.
